@@ -1,4 +1,4 @@
-﻿using MyPressureRecorder.Models;
+using MyPressureRecorder.Models;
 using MyPressureRecorder.Data;
 
 namespace MyPressureRecorder.Pages;
