@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MyPressureRecorder.Pages.ReadingsPage"
+             Title="Nuova misurazione">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="10">
+
+            <Label Text="Nuova misurazione" FontSize="20" FontAttributes="Bold"/>
+
+            <DatePicker x:Name="DatePicker" />
+            <TimePicker x:Name="TimePicker" />
+            
+            <Entry x:Name="MaxEntry" Placeholder="Massima (mmHg)" Keyboard="Numeric" />
+            <Entry x:Name="MinEntry" Placeholder="Minima (mmHg)" Keyboard="Numeric" />
+            <Entry x:Name="HeartEntry" Placeholder="Battiti (bpm)" Keyboard="Numeric" />
+
+            <Button Text="Salva" Clicked="OnSaveClicked" BackgroundColor="LightGreen"/>
+
+            <Label Text="Letture recenti" FontAttributes="Bold" Margin="0,20,0,0"/>
+            <CollectionView x:Name="ReadingsList" HeightRequest="300">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="5">
+                            <Label Text="{Binding MeasurementTime, StringFormat='{0:dd/MM/yyyy HH:mm}'}" FontAttributes="Bold"/>
+                            <Label Text="{Binding DisplayString}" FontSize="14"/>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

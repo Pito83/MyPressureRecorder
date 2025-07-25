@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using MyPressureRecorder.Data;
 
 namespace MyPressureRecorder;
 
@@ -15,8 +16,15 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
+        builder.Services.AddSingleton<AppDatabase>(s =>
+        {
+            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "pressure.db3");
+            return new AppDatabase(dbPath);
+        });
+
+
 #if DEBUG
-		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
 		return builder.Build();
