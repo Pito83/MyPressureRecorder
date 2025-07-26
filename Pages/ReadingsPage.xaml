@@ -28,6 +28,10 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+            <Button Text="📊 Statistiche"
+                    Clicked="OnStatisticsClicked"
+                    BackgroundColor="LightGray"
+                    Margin="0,20,0,0" />        
 
         </VerticalStackLayout>
     </ScrollView>

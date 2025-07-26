@@ -62,4 +62,9 @@ public partial class ReadingsPage : ContentPage
 
         await LoadReadings();
     }
+    private async void OnStatisticsClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new StatisticsPage(_user, _database));
+    }
+
 }
