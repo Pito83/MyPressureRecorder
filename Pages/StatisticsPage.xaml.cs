@@ -2,6 +2,7 @@ using Microcharts;
 using SkiaSharp;
 using MyPressureRecorder.Models;
 using MyPressureRecorder.Data;
+using System.Text;
 
 namespace MyPressureRecorder.Pages;
 
@@ -112,6 +113,69 @@ public partial class StatisticsPage : ContentPage
     private async void OnBackClicked(object sender, EventArgs e)
     {
         await Navigation.PopAsync();
+    }
+
+    private async void OnExportClicked(object sender, EventArgs e)
+    {
+        var allReadings = await _database.GetReadingsByUserAsync(_user.Id);
+
+        var now = DateTime.Now;
+        DateTime from = PeriodPicker.SelectedIndex switch
+        {
+            0 => now.AddDays(-7),
+            1 => now.AddMonths(-1),
+            2 => now.AddMonths(-3),
+            3 => now.AddYears(-1),
+            _ => DateTime.MinValue
+        };
+
+        var filtered = allReadings
+            .Where(r => r.MeasurementTime >= from)
+            .OrderBy(r => r.MeasurementTime)
+            .ToList();
+
+        if (!filtered.Any())
+        {
+            await DisplayAlert("Attenzione", "Non ci sono dati nel periodo selezionato.", "OK");
+            return;
+        }
+
+        // Costruzione CSV
+        var sb = new StringBuilder();
+        sb.AppendLine("Data/Ora;Massima;Minima;Battiti");
+
+        foreach (var r in filtered)
+        {
+            sb.AppendLine($"{r.MeasurementTime:dd/MM/yyyy HH:mm};{r.MaxPressure};{r.MinPressure};{r.HeartRate}");
+        }
+
+        var fileName = $"Pressione_{_user.Name}_{DateTime.Now:yyyyMMddHHmmss}.csv";
+        var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+
+        File.WriteAllText(filePath, sb.ToString());
+
+        // Invio email con allegato
+        var message = new EmailMessage
+        {
+            Subject = $"Dati pressione - {_user.Name}",
+            Body = $"In allegato il file CSV delle misurazioni di pressione.",
+            To = new List<string>() // lasciato vuoto per scelta dell'utente
+        };
+
+        message.Attachments.Add(new EmailAttachment(filePath));
+
+        try
+        {
+            await Email.ComposeAsync(message);
+        }
+        catch (FeatureNotSupportedException)
+        {
+            await DisplayAlert("Errore", "Invio email non supportato sul dispositivo.", "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Errore", $"Errore durante l'invio: {ex.Message}", "OK");
+        }
     }
 
 }
