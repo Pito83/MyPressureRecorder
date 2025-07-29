@@ -1,23 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MyPressureRecorder.MainPage"
-             Title="Utenti">
-    <VerticalStackLayout Padding="20" Spacing="10">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
+            x:Class="MyPressureRecorder.MainPage"  
+            Title="Utenti">  
 
-        <Label Text="Seleziona utente:" FontSize="18"/>
+   <ScrollView>  
+       <VerticalStackLayout Padding="20" Spacing="10" VerticalOptions="FillAndExpand">  
 
-        <Picker x:Name="UserPicker"
-                ItemDisplayBinding="{Binding Name}"
-                Title="Seleziona utente"/>
+           <Label Text="Seleziona utente:" FontSize="18"/>  
 
-        <HorizontalStackLayout Spacing="10">
-            <Entry x:Name="NewUserEntry" Placeholder="Nome nuovo utente" WidthRequest="200"/>
-            <Button Text="➕" Clicked="OnAddUserClicked"/>
-        </HorizontalStackLayout>
+           <Picker x:Name="UserPicker"  
+                   ItemDisplayBinding="{Binding Name}"  
+                   Title="Seleziona utente"/>  
 
-        <Button Text="🗑️ Elimina utente selezionato" Clicked="OnDeleteUserClicked" />
-        <Button Text="▶️ Entra" Clicked="OnEnterClicked" BackgroundColor="LightGreen"/>
+           <HorizontalStackLayout Spacing="10">  
+               <Entry x:Name="NewUserEntry" Placeholder="Nome nuovo utente" WidthRequest="200"/>  
+               <Button Text="➕" Clicked="OnAddUserClicked"/>  
+           </HorizontalStackLayout>  
 
-    </VerticalStackLayout>
+           <Button Text="🗑️ Elimina utente selezionato" Clicked="OnDeleteUserClicked" />  
+           <Button Text="▶️ Entra" Clicked="OnEnterClicked" BackgroundColor="LightGreen"/>  
+
+           <!-- Replacing StackLayout with Grid to fix XLS1111 -->  
+           <Grid VerticalOptions="End" Margin="0,40,0,0">  
+               <Grid.RowDefinitions>  
+                   <RowDefinition Height="Auto"/>  
+                   <RowDefinition Height="Auto"/>  
+               </Grid.RowDefinitions>  
+
+               <Image Source="pydoslogo_small.png"  
+                      HeightRequest="50"  
+                      HorizontalOptions="Center"  
+                      Grid.Row="0"/>  
+               <Label Text="Written by Pydo's Soft 2025"  
+                      FontSize="12"  
+                      TextColor="Gray"  
+                      HorizontalOptions="Center"  
+                      Grid.Row="1"/>  
+           </Grid>  
+
+       </VerticalStackLayout>  
+   </ScrollView>  
 </ContentPage>
