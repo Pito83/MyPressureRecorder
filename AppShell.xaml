@@ -3,13 +3,17 @@
     x:Class="MyPressureRecorder.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:MyPressureRecorder.Pages"
     xmlns:local="clr-namespace:MyPressureRecorder"
     Shell.FlyoutBehavior="Flyout"
     Title="MyPressureRecorder">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <FlyoutItem Title="Home" Icon="icon_home.png" Route="MainPage">
+        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Opzioni" Icon="icon_settings.png" Route="SettingsPage">
+        <ShellContent ContentTemplate="{DataTemplate pages:SettingsPage}" />
+    </FlyoutItem>
 
 </Shell>
