@@ -163,19 +163,33 @@ public partial class StatisticsPage : ContentPage
         };
 
         message.Attachments.Add(new EmailAttachment(filePath));
+               
 
         try
         {
-            await Email.ComposeAsync(message);
+            // Fix: Use IsComposeSupported instead of CanSendAsync
+            if (Email.Default.IsComposeSupported)
+            {
+                await Email.Default.ComposeAsync(message);
+            }
+            else
+            {
+                await DisplayAlert("Errore",
+                    "Nessuna app email configurata per l’invio del CSV.",
+                    "OK");
+            }
         }
         catch (FeatureNotSupportedException)
         {
-            await DisplayAlert("Errore", "Invio email non supportato sul dispositivo.", "OK");
+            await DisplayAlert("Errore",
+                "Invio email non supportato su questo dispositivo.",
+                "OK");
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Errore", $"Errore durante l'invio: {ex.Message}", "OK");
+            await DisplayAlert("Errore", $"Errore: {ex.Message}", "OK");
         }
+        
     }
 
 }
