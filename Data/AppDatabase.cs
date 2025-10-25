@@ -33,6 +33,11 @@ namespace MyPressureRecorder.Data
 
         public Task<int> SaveReadingAsync(PressureReading reading) => _database.InsertAsync(reading);
 
+        public Task<int> DeleteReadingAsync(Guid readingId) =>
+            _database.Table<PressureReading>()
+                     .Where(r => r.Id == readingId)
+                     .DeleteAsync();
+
         #endregion
     }
 }

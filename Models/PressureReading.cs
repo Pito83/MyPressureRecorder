@@ -19,5 +19,8 @@ namespace MyPressureRecorder.Models
         public int HeartRate { get; set; }
 
         public DateTime MeasurementTime { get; set; }
+
+        [Ignore]
+        public string DisplayString => $"{MaxPressure}/{MinPressure} mmHg - {HeartRate} bpm";
     }
 }

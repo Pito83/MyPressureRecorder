@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MyPressureRecorder.Data;
 using Plugin.LocalNotification;
+using CommunityToolkit.Maui;
 
 namespace MyPressureRecorder;
 
@@ -12,6 +13,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
+            .UseMauiCommunityToolkit() // 👈 aggiungi questa riga
 			.UseMicrocharts() // ⬅️ aggiunto!
 			.UseLocalNotification() // ⬅️ fondamentale!
 			.ConfigureFonts(fonts =>

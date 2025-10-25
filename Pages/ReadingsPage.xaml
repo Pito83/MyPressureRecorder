@@ -1,6 +1,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="MyPressureRecorder.Pages.ReadingsPage"
+             x:Name="ThisPage"
              Title="Nuova misurazione">
 
     <Grid>
@@ -24,16 +26,35 @@
                 <Button Text="Salva" Clicked="OnSaveClicked" BackgroundColor="LightGreen"/>
 
                 <Label Text="Letture recenti" FontAttributes="Bold" Margin="0,20,0,0"/>
-                <CollectionView x:Name="ReadingsList" HeightRequest="200">
+                <CollectionView x:Name="ReadingsList" HeightRequest="200" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout Padding="5">
-                                <Label Text="{Binding MeasurementTime, StringFormat='{0:dd/MM/yyyy HH:mm}'}" FontAttributes="Bold"/>
-                                <Label Text="{Binding DisplayString}" FontSize="14"/>
-                            </StackLayout>
+                            <Grid Padding="5" ColumnDefinitions="*, Auto">
+                                <!-- Info lettura con touch behavior -->
+                                <StackLayout Grid.Column="0" x:Name="ItemContainer">
+                                    <StackLayout.Behaviors>
+                                        <toolkit:TouchBehavior
+                                            LongPressCommand="{Binding Source={x:Reference ThisPage}, Path=DeleteReadingCommand}"
+                                            LongPressCommandParameter="{Binding Source={x:Reference ItemContainer}, Path=BindingContext}" />
+                                    </StackLayout.Behaviors>
+                                    <Label Text="{Binding MeasurementTime, StringFormat='{0:dd/MM/yyyy HH:mm}'}"
+                                            FontAttributes="Bold"/>
+                                    <Label Text="{Binding DisplayString}" FontSize="14"/>
+                                </StackLayout>
+
+                                <!-- Icona cestino (opzionale, non ancora gestita lato C#) -->
+                                <Image Grid.Column="1"
+                                       Source="trash_icon.png"
+                                       WidthRequest="24"
+                                       HeightRequest="24"
+                                       IsVisible="{Binding IsSelected}"
+                                       VerticalOptions="Center"/>           
+                            </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
+
+
 
                 <Button Text="📊 Statistiche"
                         Clicked="OnStatisticsClicked"
