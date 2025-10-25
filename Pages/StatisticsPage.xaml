@@ -24,7 +24,15 @@
                     </Picker.Items>
                 </Picker>
 
-                <microcharts:ChartView x:Name="ChartView" HeightRequest="300" />
+                <Label Text="Grafico Pressione Massima" FontAttributes="Bold" />
+                <microcharts:ChartView x:Name="MaxChart" HeightRequest="200" />
+
+                <Label Text="Grafico Pressione Minima" FontAttributes="Bold" />
+                <microcharts:ChartView x:Name="MinChart" HeightRequest="200" />
+
+                <Label Text="Grafico Battiti" FontAttributes="Bold" />
+                <microcharts:ChartView x:Name="HeartChart" HeightRequest="200" />
+
 
                 <Label Text="Valori medi" FontAttributes="Bold" FontSize="16" Margin="0,20,0,5"/>
                 <Label x:Name="AvgMaxLabel" />

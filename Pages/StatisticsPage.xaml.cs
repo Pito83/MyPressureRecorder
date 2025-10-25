@@ -52,7 +52,9 @@ public partial class StatisticsPage : ContentPage
 
         if (!filtered.Any())
         {
-            ChartView.Chart = null;
+            MaxChart.Chart = null;
+            MinChart.Chart = null;
+            HeartChart.Chart = null;
             AvgMaxLabel.Text = "Nessun dato";
             AvgMinLabel.Text = "";
             AvgHeartLabel.Text = "";
@@ -95,15 +97,11 @@ public partial class StatisticsPage : ContentPage
 
         // Sovrapporre i grafici è limitato in Microcharts.
         // Per ora mostriamo solo la pressione massima. (alternativa: switch o multi-grafico)
+        
+        MaxChart.Chart = new LineChart { Entries = maxEntries, LineSize = 4, PointSize = 8, PointMode = PointMode.Square, LineMode = LineMode.Straight };
+        MinChart.Chart = new LineChart { Entries = minEntries, LineSize = 4, PointSize = 8, PointMode = PointMode.Square, LineMode = LineMode.Straight };
+        HeartChart.Chart = new LineChart { Entries = heartEntries, LineSize = 4, PointSize = 8, PointMode = PointMode.Square, LineMode = LineMode.Straight };
 
-        ChartView.Chart = new LineChart
-        {
-            Entries = maxEntries,
-            LineMode = LineMode.Straight,
-            LineSize = 5,
-            PointMode = PointMode.Circle,
-            PointSize = 10
-        };
 
         // Vuoi mostrare anche minima e battiti in modo alternato/switch? Posso aiutarti dopo.
 
