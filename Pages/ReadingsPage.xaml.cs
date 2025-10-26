@@ -40,8 +40,8 @@ public partial class ReadingsPage : ContentPage
             if (!answer)
             {
                 item.IsSelected = false;
-                ReadingsList.ItemsSource = null;
-                ReadingsList.ItemsSource = (List<ReadingDisplayItem>)ReadingsList.ItemsSource;
+                //ReadingsList.ItemsSource = null;
+                //ReadingsList.ItemsSource = (List<ReadingDisplayItem>)ReadingsList.ItemsSource;
                 return;
             }
 

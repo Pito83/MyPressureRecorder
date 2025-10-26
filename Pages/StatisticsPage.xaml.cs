@@ -148,46 +148,24 @@ public partial class StatisticsPage : ContentPage
         }
 
         var fileName = $"Pressione_{_user.Name}_{DateTime.Now:yyyyMMddHHmmss}.csv";
-        var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+        var filePath = Path.Combine(FileSystem.CacheDirectory, fileName);
 
         File.WriteAllText(filePath, sb.ToString());
 
-        // Invio email con allegato
-        var message = new EmailMessage
-        {
-            Subject = $"Dati pressione - {_user.Name}",
-            Body = $"In allegato il file CSV delle misurazioni di pressione.",
-            To = new List<string>() // lasciato vuoto per scelta dell'utente
-        };
-
-        message.Attachments.Add(new EmailAttachment(filePath));
-               
-
+        // Condivisione CSV tramite qualsiasi app
         try
         {
-            // Fix: Use IsComposeSupported instead of CanSendAsync
-            if (Email.Default.IsComposeSupported)
+            await Share.RequestAsync(new ShareFileRequest
             {
-                await Email.Default.ComposeAsync(message);
-            }
-            else
-            {
-                await DisplayAlert("Errore",
-                    "Nessuna app email configurata per l’invio del CSV.",
-                    "OK");
-            }
-        }
-        catch (FeatureNotSupportedException)
-        {
-            await DisplayAlert("Errore",
-                "Invio email non supportato su questo dispositivo.",
-                "OK");
+                Title = "Condividi il file CSV",
+                File = new ShareFile(filePath)
+            });
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Errore", $"Errore: {ex.Message}", "OK");
+            await DisplayAlert("Errore", $"Errore nella condivisione: {ex.Message}", "OK");
         }
-        
+
     }
 
 }
