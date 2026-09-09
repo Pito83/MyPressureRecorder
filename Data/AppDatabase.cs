@@ -38,6 +38,21 @@ namespace MyPressureRecorder.Data
                      .Where(r => r.Id == readingId)
                      .DeleteAsync();
 
+        /// <summary>Inserisce in blocco un elenco di misurazioni (una sola transazione).</summary>
+        public Task AddReadingsAsync(IReadOnlyList<PressureReading> readings) =>
+            _database.RunInTransactionAsync(conn => conn.InsertAll(readings));
+
+        /// <summary>
+        /// Sostituisce tutte le misurazioni dell'utente indicato con quelle fornite,
+        /// in un'unica transazione (o tutto o niente).
+        /// </summary>
+        public Task ReplaceUserReadingsAsync(Guid userId, IReadOnlyList<PressureReading> readings) =>
+            _database.RunInTransactionAsync(conn =>
+            {
+                conn.Table<PressureReading>().Delete(r => r.UserId == userId);
+                conn.InsertAll(readings);
+            });
+
         #endregion
     }
 }
