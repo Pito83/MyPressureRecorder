@@ -2,7 +2,6 @@ using Microcharts;
 using SkiaSharp;
 using MyPressureRecorder.Models;
 using MyPressureRecorder.Data;
-using System.Text;
 
 namespace MyPressureRecorder.Pages;
 
@@ -31,12 +30,10 @@ public partial class StatisticsPage : ContentPage
         await LoadAndDisplayData();
     }
 
-    private async Task LoadAndDisplayData()
+    private DateTime PeriodFrom()
     {
-        var allReadings = await _database.GetReadingsByUserAsync(_user.Id);
         var now = DateTime.Now;
-
-        DateTime from = PeriodPicker.SelectedIndex switch
+        return PeriodPicker.SelectedIndex switch
         {
             0 => now.AddDays(-7),
             1 => now.AddMonths(-1),
@@ -44,6 +41,12 @@ public partial class StatisticsPage : ContentPage
             3 => now.AddYears(-1),
             _ => DateTime.MinValue
         };
+    }
+
+    private async Task LoadAndDisplayData()
+    {
+        var allReadings = await _database.GetReadingsByUserAsync(_user.Id);
+        var from = PeriodFrom();
 
         var filtered = allReadings
             .Where(r => r.MeasurementTime >= from)
@@ -95,7 +98,7 @@ public partial class StatisticsPage : ContentPage
                 Color = SKColor.Parse("#00AA00")
             }).ToList();
 
-        // Sovrapporre i grafici � limitato in Microcharts.
+        // Sovrapporre i grafici � limitato in Microcharts.
         // Per ora mostriamo solo la pressione massima. (alternativa: switch o multi-grafico)
         
         MaxChart.Chart = new LineChart { Entries = maxEntries, LineSize = 4, PointSize = 8, PointMode = PointMode.Square, LineMode = LineMode.Straight };
@@ -116,48 +119,50 @@ public partial class StatisticsPage : ContentPage
     private async void OnExportClicked(object sender, EventArgs e)
     {
         var allReadings = await _database.GetReadingsByUserAsync(_user.Id);
-
-        var now = DateTime.Now;
-        DateTime from = PeriodPicker.SelectedIndex switch
-        {
-            0 => now.AddDays(-7),
-            1 => now.AddMonths(-1),
-            2 => now.AddMonths(-3),
-            3 => now.AddYears(-1),
-            _ => DateTime.MinValue
-        };
+        var from = PeriodFrom();
 
         var filtered = allReadings
             .Where(r => r.MeasurementTime >= from)
             .OrderBy(r => r.MeasurementTime)
             .ToList();
 
-        if (!filtered.Any())
+        if (filtered.Count == 0)
         {
             await DisplayAlert("Attenzione", "Non ci sono dati nel periodo selezionato.", "OK");
             return;
         }
 
-        // Costruzione CSV
-        var sb = new StringBuilder();
-        sb.AppendLine("Data/Ora;Massima;Minima;Battiti");
+        var fileName = $"Pressione_{CsvService.SafeFileName(_user.Name)}_{DateTime.Now:yyyyMMddHHmmss}.csv";
+        await ShareCsvAsync(CsvService.Export(filtered), fileName, "Condividi il CSV del periodo");
+    }
 
-        foreach (var r in filtered)
+    private async void OnFullBackupClicked(object sender, EventArgs e)
+    {
+        var allReadings = (await _database.GetReadingsByUserAsync(_user.Id))
+            .OrderBy(r => r.MeasurementTime)
+            .ToList();
+
+        if (allReadings.Count == 0)
         {
-            sb.AppendLine($"{r.MeasurementTime:dd/MM/yyyy HH:mm};{r.MaxPressure};{r.MinPressure};{r.HeartRate}");
+            await DisplayAlert("Attenzione", "Non ci sono misurazioni da salvare.", "OK");
+            return;
         }
 
-        var fileName = $"Pressione_{_user.Name}_{DateTime.Now:yyyyMMddHHmmss}.csv";
+        var fileName = $"Pressione-backup_{CsvService.SafeFileName(_user.Name)}_{DateTime.Now:yyyyMMddHHmmss}.csv";
+        await ShareCsvAsync(CsvService.Export(allReadings), fileName,
+            $"Backup completo di «{_user.Name}» ({allReadings.Count} misurazioni)");
+    }
+
+    private async Task ShareCsvAsync(string csv, string fileName, string shareTitle)
+    {
         var filePath = Path.Combine(FileSystem.CacheDirectory, fileName);
 
-        File.WriteAllText(filePath, sb.ToString());
-
-        // Condivisione CSV tramite qualsiasi app
         try
         {
+            File.WriteAllText(filePath, csv);
             await Share.RequestAsync(new ShareFileRequest
             {
-                Title = "Condividi il file CSV",
+                Title = shareTitle,
                 File = new ShareFile(filePath)
             });
         }
@@ -165,7 +170,6 @@ public partial class StatisticsPage : ContentPage
         {
             await DisplayAlert("Errore", $"Errore nella condivisione: {ex.Message}", "OK");
         }
-
     }
 
 }

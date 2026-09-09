@@ -13,7 +13,9 @@ Developed by **Pydo's Soft** – 2025.
 - Per-user list of measurements, with long-press to delete
 - Statistics by period (1 week / 1 month / 3 months / 1 year / all):
   line charts for systolic, diastolic and heart rate, plus averages
-- Export data to CSV and share via the system share sheet
+- Export to CSV: current period or a full backup, shared via the system share sheet
+- Import measurements from a CSV file into the selected user (append with
+  de-duplication, or full replace)
 - Daily local reminders (08:00 and 20:00), toggleable from Settings
 
 ## Supported platforms
@@ -70,7 +72,7 @@ MainPage.xaml    User selection / creation
   unencrypted SQLite database.
 - On Android `allowBackup` is disabled (`false`): the data is not included in
   system backups and never leaves the device. Migrating history to a new device
-  is done through the CSV export.
+  is done with the "full backup" CSV export and the CSV import.
 - The exported CSV is written to the app cache and shared only on an explicit
   user action, via the system share sheet (mail, messaging, cloud…). It contains
   the user name and the measurements.

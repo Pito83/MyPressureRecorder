@@ -43,8 +43,12 @@
                         Clicked="OnBackClicked"
                         BackgroundColor="LightGray"
                         Margin="0,20,0,0" />
-                <Button Text="📤 Esporta e Invia CSV"
+                <Button Text="📤 Esporta periodo (CSV)"
                         Clicked="OnExportClicked"
+                        BackgroundColor="LightBlue"
+                        Margin="0,10,0,0" />
+                <Button Text="💾 Backup completo (CSV)"
+                        Clicked="OnFullBackupClicked"
                         BackgroundColor="LightBlue"
                         Margin="0,10,0,20" />
 
