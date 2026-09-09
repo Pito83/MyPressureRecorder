@@ -24,7 +24,7 @@
 		<ApplicationTitle>MyPressureRecorder</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.pydosmind.mypressurerecorder</ApplicationId>
+		<ApplicationId>com.pydosoft.mypressurerecorder</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0.4</ApplicationDisplayVersion>
