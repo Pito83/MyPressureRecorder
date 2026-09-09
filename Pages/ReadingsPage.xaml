@@ -44,7 +44,7 @@
 
                                 <!-- Icona cestino (opzionale, non ancora gestita lato C#) -->
                                 <Image Grid.Column="1"
-                                       Source="trash_icon.png"
+                                       Source="delete.png"
                                        WidthRequest="24"
                                        HeightRequest="24"
                                        IsVisible="{Binding IsSelected}"
