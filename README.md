@@ -16,7 +16,8 @@ Developed by **Pydo's Soft** – 2025.
 - Export to CSV: current period or a full backup, shared via the system share sheet
 - Import measurements from a CSV file into the selected user (append with
   de-duplication, or full replace)
-- Daily local reminders (08:00 and 20:00), toggleable from Settings
+- Daily local reminders (08:00 and 20:00), toggleable from Settings; the
+  notification permission is requested at runtime on Android 13+
 
 ## Supported platforms
 
@@ -38,7 +39,9 @@ Developed by **Pydo's Soft** – 2025.
 
 ## Building
 
-Prerequisites: .NET 9 SDK and the MAUI workload.
+Prerequisites: .NET 9 SDK and the MAUI workload. A `global.json` pins the SDK to
+9.0.x, so the build keeps using .NET 9 even if a newer SDK is installed
+(`net9.0` targets are not supported by the .NET 11 SDK).
 
 ```bash
 dotnet workload install maui
@@ -53,7 +56,14 @@ dotnet build -t:Run -f net9.0-android
 ```
 
 The build produces an APK (`AndroidPackageFormat=apk`), suitable for testing and
-sideloading. For Play Store publishing, switch to `aab` and configure signing.
+sideloading. To build a release APK:
+
+```bash
+dotnet publish -f net9.0-android -c Release
+```
+
+The installable file is `bin/Release/net9.0-android/publish/com.pydosoft.mypressurerecorder-Signed.apk`.
+For Play Store publishing, switch to `aab` and configure signing.
 
 ## Project layout
 
