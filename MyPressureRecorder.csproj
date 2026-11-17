@@ -29,6 +29,8 @@
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0.4</ApplicationDisplayVersion>
 		<ApplicationVersion>4</ApplicationVersion>
+		<!-- Same PackageVersion for every target framework (required by NuGet restore) -->
+		<PackageVersion>$(ApplicationDisplayVersion)</PackageVersion>
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 		<WindowsPackageType>None</WindowsPackageType>
